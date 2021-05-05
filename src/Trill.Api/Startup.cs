@@ -5,8 +5,10 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Trill.Core;
 using Trill.Core.App.Services;
 using Trill.Core.Domain.Entities;
@@ -15,8 +17,17 @@ namespace Trill.Api
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ApiOptions>(_configuration.GetSection("api"));
+            
             services.AddControllers().AddJsonOptions(x =>
             {
                 x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -40,7 +51,8 @@ namespace Trill.Api
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    var apiOptions = context.RequestServices.GetRequiredService<IOptions<ApiOptions>>();
+                    await context.Response.WriteAsync(apiOptions.Value.Name);
                 });
 
                 endpoints.MapGet("stories", async context =>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Trill.Core.Domain.Entities;
 
 namespace Trill.Core.App.Services
@@ -12,8 +13,15 @@ namespace Trill.Core.App.Services
         {
             new Story(Guid.NewGuid(), "Story 1", "Lorem ipsum 1", "user1", new[] {"tag1", "tag2"}),
             new Story(Guid.NewGuid(), "Story 2", "Lorem ipsum 2", "user1", new[] {"tag2", "tag3"}),
-            new Story(Guid.NewGuid(), "Story 3", "Lorem ipsum 3", "user2", new[] {"tag1", "tag3"}),
+            new Story(Guid.NewGuid(), "Story 3", "Lorem ipsum 3", "user2", new[] {"tag1", "tag3"})
         };
+        
+        private readonly IOptions<ApiOptions> _apiOptions;
+
+        public StoryService(IOptions<ApiOptions> apiOptions)
+        {
+            _apiOptions = apiOptions;
+        }
     
         public async Task<Story> GetAsync(Guid id)
         {

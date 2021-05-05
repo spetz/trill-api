@@ -7,7 +7,7 @@ namespace Trill.Core
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
-            services.AddSingleton<IStoryService, StoryService>();
+            services.AddScoped<IStoryService, StoryService>();
 
             return services;
         }
