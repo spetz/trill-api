@@ -35,15 +35,25 @@ namespace Trill.Api
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+            services.AddSingleton<ErrorHandlerMiddleware>();
+
             services.AddCore();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            app.Use(async (ctx, next) =>
             {
-                app.UseDeveloperExceptionPage();
-            }
+                if (ctx.Request.Query.TryGetValue("token", out var token) && token == "secret")
+                {
+                    await ctx.Response.WriteAsync("Secret");
+                    return;
+                }
+
+                await next();
+            });
 
             app.UseRouting();
 
