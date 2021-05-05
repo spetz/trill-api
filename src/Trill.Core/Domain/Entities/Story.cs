@@ -35,7 +35,7 @@ namespace Trill.Core.Domain.Entities
                 throw new ArgumentException("Missing author.");
             }
 
-            Id = id;
+            Id = id == Guid.Empty ? Guid.NewGuid() : id;
             Title = title.Trim();
             Text = text.Trim();
             Author = author;

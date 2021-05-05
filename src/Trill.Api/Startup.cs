@@ -1,27 +1,30 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Trill.Core;
+using Trill.Core.App.Services;
 using Trill.Core.Domain.Entities;
 
 namespace Trill.Api
 {
     public class Startup
     {
-        private readonly List<Story> _stories = new()
-        {
-            new Story(Guid.NewGuid(), "Story 1", "Lorem ipsum 1", "user1", new[] {"tag1", "tag2"}),
-            new Story(Guid.NewGuid(), "Story 2", "Lorem ipsum 2", "user1", new[] {"tag2", "tag3"}),
-            new Story(Guid.NewGuid(), "Story 3", "Lorem ipsum 3", "user2", new[] {"tag1", "tag3"}),
-        };
-        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers().AddJsonOptions(x =>
+            {
+                x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                x.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+            services.AddCore();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -42,13 +45,16 @@ namespace Trill.Api
 
                 endpoints.MapGet("stories", async context =>
                 {
-                    await context.Response.WriteAsJsonAsync(_stories);
+                    var storyService = context.RequestServices.GetRequiredService<IStoryService>();
+                    var stories = await storyService.BrowseAsync();
+                    await context.Response.WriteAsJsonAsync(stories);
                 });
                 
                 endpoints.MapGet("stories/{storyId:guid}", async context =>
                 {
                     var storyId = Guid.Parse(context.Request.RouteValues["storyId"].ToString());
-                    var story = _stories.SingleOrDefault(x => x.Id == storyId);
+                    var storyService = context.RequestServices.GetRequiredService<IStoryService>();
+                    var story = await storyService.GetAsync(storyId);
                     if (story is null)
                     {
                         context.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -67,7 +73,8 @@ namespace Trill.Api
                         return;
                     }
 
-                    _stories.Add(story);
+                    var storyService = context.RequestServices.GetRequiredService<IStoryService>();
+                    await storyService.AddAsync(story);
                     context.Response.Headers.Add(HttpResponseHeader.Location.ToString(), $"stories/{story.Id}");
                     context.Response.StatusCode = StatusCodes.Status201Created;
                 });

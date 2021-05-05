@@ -1,0 +1,22 @@
+@url = http://localhost:5000
+@storyId = 90e3a6cd-77d1-4f7b-badd-99efbf6dd269
+
+###
+GET {{url}}
+
+###
+GET {{url}}/stories
+
+###
+GET {{url}}/stories/{{storyId}}
+
+###
+POST {{url}}/stories
+Content-Type: application/json
+
+{
+    "title": "Story 123",
+    "text": "Lorem ipsum 123",
+    "author": "user1",
+    "tags": ["tag1", "tag2"]
+}
