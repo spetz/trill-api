@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Trill.Core.Domain.Entities;
 
 namespace Trill.Core.App.Services
@@ -16,11 +16,11 @@ namespace Trill.Core.App.Services
             new Story(Guid.NewGuid(), "Story 3", "Lorem ipsum 3", "user2", new[] {"tag1", "tag3"})
         };
         
-        private readonly IOptions<ApiOptions> _apiOptions;
+        private readonly ILogger<StoryService> _logger;
 
-        public StoryService(IOptions<ApiOptions> apiOptions)
+        public StoryService(ILogger<StoryService> logger)
         {
-            _apiOptions = apiOptions;
+            _logger = logger;
         }
     
         public async Task<Story> GetAsync(Guid id)
@@ -39,6 +39,7 @@ namespace Trill.Core.App.Services
         {
             await Task.CompletedTask;
             _stories.Add(story);
+            _logger.LogInformation($"Added a story with ID: '{story.Id}'.");
         }
     }
 }
