@@ -17,7 +17,7 @@ namespace Trill.Core.App.Commands
         [StringLength(1000, MinimumLength = 5)]
         public string Text { get; }
         
-        [Required]
+        // [Required]
         public string Author { get; }
         
         public IEnumerable<string> Tags { get; }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Trill.Core.Exceptions;
 
 namespace Trill.Api
 {
@@ -22,8 +23,20 @@ namespace Trill.Api
             }
             catch (Exception exception)
             {
+                if (exception is CustomException customException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    var response = new
+                    {
+                        code = customException.Code,
+                        message = customException.Message
+                    };
+                    await context.Response.WriteAsJsonAsync(response);
+                    return;
+                }
+                
                 _logger.LogError(exception, exception.Message);
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             }
         }
     }
