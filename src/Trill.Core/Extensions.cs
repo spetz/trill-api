@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Trill.Core.App.Services;
+using Trill.Core.Repositories;
 
 namespace Trill.Core
 {
@@ -8,6 +9,7 @@ namespace Trill.Core
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
             services.AddScoped<IStoryService, StoryService>();
+            services.AddSingleton<IStoryRepository, InMemoryStoryRepository>();
 
             return services;
         }

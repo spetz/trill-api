@@ -6,22 +6,18 @@ using Microsoft.Extensions.Logging;
 using Trill.Core.App.Commands;
 using Trill.Core.App.Queries;
 using Trill.Core.Domain.Entities;
+using Trill.Core.Repositories;
 
 namespace Trill.Core.App.Services
 {
     public class StoryService : IStoryService
     {
-        private readonly List<Story> _stories = new()
-        {
-            new Story(Guid.NewGuid(), "Story 1", "Lorem ipsum 1", "user1", new[] {"tag1", "tag2"}),
-            new Story(Guid.NewGuid(), "Story 2", "Lorem ipsum 2", "user1", new[] {"tag2", "tag3"}),
-            new Story(Guid.NewGuid(), "Story 3", "Lorem ipsum 3", "user2", new[] {"tag1", "tag3"})
-        };
-        
+        private readonly IStoryRepository _storyRepository;
         private readonly ILogger<StoryService> _logger;
 
-        public StoryService(ILogger<StoryService> logger)
+        public StoryService(IStoryRepository storyRepository, ILogger<StoryService> logger)
         {
+            _storyRepository = storyRepository;
             _logger = logger;
         }
     
@@ -34,17 +30,6 @@ namespace Trill.Core.App.Services
         public async Task<IEnumerable<Story>> BrowseAsync(BrowseStories query)
         {
             await Task.CompletedTask;
-            var stories = _stories.AsEnumerable();
-            if (!string.IsNullOrWhiteSpace(query.Author))
-            {
-                stories = stories.Where(x => x.Author == query.Author);
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.Title))
-            {
-                stories = stories.Where(x => x.Title.Contains(query.Title));
-            }
-
             return stories;
         }
 
