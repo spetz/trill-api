@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Trill.Core;
 using Trill.Core.App.Services;
@@ -59,6 +58,8 @@ namespace Trill.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
+                
                 endpoints.MapGet("/", async context =>
                 {
                     var apiOptions = context.RequestServices.GetRequiredService<IOptions<ApiOptions>>();
