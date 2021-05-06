@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using Trill.Core.Repositories;
 
 namespace Trill.Core.Mongo
 {
@@ -33,6 +35,9 @@ namespace Trill.Core.Mongo
                 var client = sp.GetRequiredService<IMongoClient>();
                 return client.GetDatabase(options.Database);
             });
+
+            services.AddTransient<IStoryRepository, MongoStoryRepository>();
+            
             return services;
         }
     }
