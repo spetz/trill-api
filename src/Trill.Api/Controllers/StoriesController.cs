@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using Trill.Core.App.Commands;
 using Trill.Core.App.Queries;
 using Trill.Core.App.Services;
@@ -21,10 +22,14 @@ namespace Trill.Api.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation("Browse the stories")]
         public async Task<ActionResult<IEnumerable<Story>>> Get([FromQuery] BrowseStories query)
             => Ok(await _storyService.BrowseAsync(query));
 
         [HttpGet("{storyId:guid}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [SwaggerOperation("Get a single story by ID")]
         public async Task<ActionResult<Story>> Get(Guid storyId)
         {
             var story = await _storyService.GetAsync(storyId);
@@ -37,6 +42,9 @@ namespace Trill.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [SwaggerOperation("Create a story")]
         public async Task<ActionResult> Post(SendStory story)
         {
             await _storyService.AddAsync(story);

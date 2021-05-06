@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Trill.Core;
 using Trill.Core.App.Commands;
 using Trill.Core.App.Queries;
 using Trill.Core.App.Services;
-using Trill.Core.Domain.Entities;
 
 namespace Trill.Api
 {
@@ -35,6 +35,12 @@ namespace Trill.Api
                 x.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+            
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Trill API", Version = "v1" });
+            });
 
             services.AddSingleton<ErrorHandlerMiddleware>();
 
@@ -44,6 +50,9 @@ namespace Trill.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trill API v1"); });
 
             app.Use(async (ctx, next) =>
             {

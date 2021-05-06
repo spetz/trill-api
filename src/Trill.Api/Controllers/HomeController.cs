@@ -15,6 +15,7 @@ namespace Trill.Api.Controllers
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public ActionResult<string> Get() => Ok(_options.Value.Name);
     }
 }
