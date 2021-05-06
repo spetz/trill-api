@@ -13,6 +13,7 @@ using Trill.Core;
 using Trill.Core.App.Commands;
 using Trill.Core.App.Queries;
 using Trill.Core.App.Services;
+using Trill.Core.Mongo;
 
 namespace Trill.Api
 {

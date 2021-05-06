@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Trill.Core.App.Services;
+using Trill.Core.Mongo;
 using Trill.Core.Repositories;
 
 namespace Trill.Core
@@ -10,6 +11,7 @@ namespace Trill.Core
         {
             services.AddScoped<IStoryService, StoryService>();
             services.AddSingleton<IStoryRepository, InMemoryStoryRepository>();
+            services.AddMongo();
 
             return services;
         }
