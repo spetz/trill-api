@@ -34,7 +34,18 @@ namespace Trill.Core.App.Services
         public async Task<IEnumerable<Story>> BrowseAsync(BrowseStories query)
         {
             await Task.CompletedTask;
-            return _stories;
+            var stories = _stories.AsEnumerable();
+            if (!string.IsNullOrWhiteSpace(query.Author))
+            {
+                stories = stories.Where(x => x.Author == query.Author);
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Title))
+            {
+                stories = stories.Where(x => x.Title.Contains(query.Title));
+            }
+
+            return stories;
         }
 
         public async Task AddAsync(SendStory command)
