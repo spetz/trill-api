@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Trill.Core.App.Commands;
+using Trill.Core.App.Queries;
 using Trill.Core.Domain.Entities;
 
 namespace Trill.Core.App.Services
@@ -30,7 +31,7 @@ namespace Trill.Core.App.Services
             return _stories.SingleOrDefault(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Story>> BrowseAsync()
+        public async Task<IEnumerable<Story>> BrowseAsync(BrowseStories query)
         {
             await Task.CompletedTask;
             return _stories;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Trill.Core.App.Commands;
+using Trill.Core.App.Queries;
 using Trill.Core.App.Services;
 using Trill.Core.Domain.Entities;
 
@@ -20,8 +21,8 @@ namespace Trill.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Story>>> Get()
-            => Ok(await _storyService.BrowseAsync());
+        public async Task<ActionResult<IEnumerable<Story>>> Get([FromQuery] BrowseStories query)
+            => Ok(await _storyService.BrowseAsync(query));
 
         [HttpGet("{storyId:guid}")]
         public async Task<ActionResult<Story>> Get(Guid storyId)

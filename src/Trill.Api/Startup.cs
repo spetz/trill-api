@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Trill.Core;
 using Trill.Core.App.Commands;
+using Trill.Core.App.Queries;
 using Trill.Core.App.Services;
 using Trill.Core.Domain.Entities;
 
@@ -70,7 +71,7 @@ namespace Trill.Api
                 endpoints.MapGet("stories", async context =>
                 {
                     var storyService = context.RequestServices.GetRequiredService<IStoryService>();
-                    var stories = await storyService.BrowseAsync();
+                    var stories = await storyService.BrowseAsync(new BrowseStories());
                     await context.Response.WriteAsJsonAsync(stories);
                 });
                 
