@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Trill.Core.Exceptions;
 
 namespace Trill.Core.Domain.Entities
 {
@@ -31,7 +32,7 @@ namespace Trill.Core.Domain.Entities
 
             if (string.IsNullOrWhiteSpace(author))
             {
-                throw new ArgumentException("Missing author.");
+                throw new MissingAuthorException();
             }
 
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
