@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Trill.Core.App.Commands;
@@ -23,21 +22,18 @@ namespace Trill.Core.App.Services
     
         public async Task<Story> GetAsync(Guid id)
         {
-            await Task.CompletedTask;
-            return _stories.SingleOrDefault(x => x.Id == id);
+            return await _storyRepository.GetAsync(id);
         }
 
         public async Task<IEnumerable<Story>> BrowseAsync(BrowseStories query)
         {
-            await Task.CompletedTask;
-            return stories;
+            return await _storyRepository.BrowseAsync(query);
         }
 
         public async Task AddAsync(SendStory command)
         {
-            await Task.CompletedTask;
             var story = new Story(command.Id, command.Title, command.Text, command.Author, command.Tags);
-            _stories.Add(story);
+            await _storyRepository.AddAsync(story);
             _logger.LogInformation($"Added a story with ID: '{command.Id}'.");
         }
     }

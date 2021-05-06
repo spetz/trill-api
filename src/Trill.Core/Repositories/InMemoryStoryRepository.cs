@@ -9,6 +9,7 @@ namespace Trill.Core.Repositories
 {
     public class InMemoryStoryRepository : IStoryRepository
     {
+        // Not thread-safe (use e.g. Concurrent collections instead)
         private readonly List<Story> _stories = new();
         
         public async Task<Story> GetAsync(Guid id)
