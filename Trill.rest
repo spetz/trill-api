@@ -1,4 +1,4 @@
-@url = http://localhost:5000
+@url = http://localhost:5000/api
 @storyId = 90e3a6cd-77d1-4f7b-badd-99efbf6dd269
 
 ###

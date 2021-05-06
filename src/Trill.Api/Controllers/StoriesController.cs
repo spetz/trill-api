@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Trill.Core.App.Commands;
 using Trill.Core.App.Services;
 using Trill.Core.Domain.Entities;
 
@@ -35,7 +36,7 @@ namespace Trill.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Story story)
+        public async Task<ActionResult> Post(SendStory story)
         {
             await _storyService.AddAsync(story);
             return CreatedAtAction(nameof(Get), new {storyId = story.Id}, null);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Trill.Core.App.Commands;
 using Trill.Core.Domain.Entities;
 
 namespace Trill.Core.App.Services
@@ -35,11 +36,12 @@ namespace Trill.Core.App.Services
             return _stories;
         }
 
-        public async Task AddAsync(Story story)
+        public async Task AddAsync(SendStory command)
         {
             await Task.CompletedTask;
+            var story = new Story(command.Id, command.Title, command.Text, command.Author, command.Tags);
             _stories.Add(story);
-            _logger.LogInformation($"Added a story with ID: '{story.Id}'.");
+            _logger.LogInformation($"Added a story with ID: '{command.Id}'.");
         }
     }
 }

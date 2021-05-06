@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Trill.Core;
+using Trill.Core.App.Commands;
 using Trill.Core.App.Services;
 using Trill.Core.Domain.Entities;
 
@@ -89,7 +90,7 @@ namespace Trill.Api
                 
                 endpoints.MapPost("stories", async context =>
                 {
-                    var story = await context.Request.ReadFromJsonAsync<Story>();
+                    var story = await context.Request.ReadFromJsonAsync<SendStory>();
                     if (story is null)
                     {
                         context.Response.StatusCode = StatusCodes.Status400BadRequest;
